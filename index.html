@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Besela - Focus with YouTube</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@300;400;600&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Besela</h1>
+        </header>
+
+        <div class="video-input-section">
+            <h2>Add YouTube Video</h2>
+            <div class="input-group">
+                <input type="text" id="video-url" placeholder="Paste YouTube URL here...">
+                <button id="load-video">Load Video</button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="video-container">
+                <div id="player"></div>
+                <div id="video-placeholder">
+                    <i class="fas fa-video"></i>
+                    <p>Your video will appear here</p>
+                </div>
+            </div>
+
+            <div class="timer-section">
+                <div class="timer-display">
+                    <h2 id="timer-label">Study Time</h2>
+                    <div id="time-display">25:00</div>
+                    <div class="timer-status" id="timer-status">Ready to start</div>
+                </div>
+
+                <div class="timer-controls">
+                    <div class="time-inputs">
+                        <div class="input-group">
+                            <label for="study-minutes">Study (min)</label>
+                            <input type="number" id="study-minutes" min="1" max="120" value="25">
+                        </div>
+                        <div class="input-group">
+                            <label for="break-minutes">Break (min)</label>
+                            <input type="number" id="break-minutes" min="1" max="60" value="5">
+                        </div>
+                    </div>
+                    <div class="control-buttons">
+                        <button id="start-timer" class="primary-btn"><i class="fas fa-play"></i> Start</button>
+                        <button id="pause-timer" disabled><i class="fas fa-pause"></i> Pause</button>
+                        <button id="reset-timer"><i class="fas fa-redo"></i> Reset</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="session-history">
+            <h2>Session History</h2>
+            <ul id="history-list">
+            </ul>
+        </div>
+    </div>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="script.js"></script>
+=<script>
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	
+</script>
+</body>
+</html>
